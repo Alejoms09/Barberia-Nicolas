@@ -64,6 +64,14 @@ Perfil Docker (MySQL por contenedor):
 ```
 En Windows PowerShell: `.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=docker`
 
+Perfil MySQL local (sin Docker Compose):
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql
+```
+En Windows PowerShell: `.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=mysql`
+
+Nota: este perfil usa `localhost:3307` con usuario `root` y clave `123456` (configurado en `application-mysql.properties`).
+
 ## Endpoints API
 - `GET /api/barbers`
 - `GET /api/services`
