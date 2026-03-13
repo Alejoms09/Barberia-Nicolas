@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nicolas Barber Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<header class="hero">
+    <nav class="topbar">
+        <span class="brand">Nicolas Barber Studio</span>
+        <a class="cta-link" href="#booking">Reservar ahora</a>
+    </nav>
+
+    <div class="hero-content">
+        <p class="tag">Estilo premium para hombres</p>
+        <h1>Cortes que hablan por ti</h1>
+        <p class="subtitle">Reserva tu cita en segundos y vive una experiencia moderna, limpia y profesional.</p>
+        <a href="#booking" class="hero-button">Quiero mi cita</a>
+    </div>
+</header>
+
+<main>
+    <section class="features">
+        <article>
+            <h3>Especialistas</h3>
+            <p>Barberos con enfoque en precision y tendencias actuales.</p>
+        </article>
+        <article>
+            <h3>Agenda rapida</h3>
+            <p>Selecciona servicio, hora y confirma al instante.</p>
+        </article>
+        <article>
+            <h3>Ambiente premium</h3>
+            <p>Un espacio elegante, comodo y pensado para tu imagen.</p>
+        </article>
+    </section>
+
+    <section id="booking" class="booking">
+        <div class="booking-card">
+            <h2>Reserva tu cita</h2>
+            <form id="appointment-form">
+                <label>Nombre
+                    <input type="text" id="clientName" required />
+                </label>
+
+                <label>Correo
+                    <input type="email" id="clientEmail" required />
+                </label>
+
+                <label>Barbero
+                    <select id="barberId" required></select>
+                </label>
+
+                <label>Servicio
+                    <select id="serviceId" required></select>
+                </label>
+
+                <div class="row">
+                    <label>Fecha
+                        <input type="date" id="appointmentDate" required />
+                    </label>
+
+                    <label>Hora
+                        <input type="time" id="appointmentTime" required />
+                    </label>
+                </div>
+
+                <button type="submit">Confirmar reserva</button>
+                <p id="message"></p>
+            </form>
+        </div>
+
+        <div class="list-card">
+            <h2>Citas registradas</h2>
+            <ul id="appointments-list"></ul>
+        </div>
+    </section>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

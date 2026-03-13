@@ -1,0 +1,11 @@
+# Evita enviar artefactos de build al contexto Docker.
+target
+
+# Evita subir metadatos de IDE al build context.
+.idea
+
+# Excluye base H2 local para no contaminar imagen.
+data
+
+# No se necesita el repositorio git dentro de la imagen.
+.git

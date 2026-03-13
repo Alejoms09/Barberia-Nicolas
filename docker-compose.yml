@@ -1,0 +1,79 @@
+# Version de Compose compatible con Docker Compose v2 (plugin moderno).
+services:
+  # Servicio de base de datos MySQL (tercera imagen independiente).
+  db:
+    # Se construye una imagen propia desde backend/database.
+    build:
+      context: ./backend/database
+      dockerfile: Dockerfile
+    image: barberia-db:latest
+    container_name: barberia-db
+    environment:
+      # Credenciales y base inicial para el contenedor MySQL.
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: barberia_db
+    # No se expone puerto al host para evitar conflictos locales.
+    # El backend accede por red interna usando el nombre de servicio "db".
+    volumes:
+      # Volumen persistente para no perder datos al apagar contenedores.
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      # Verifica que MySQL este listo antes de iniciar dependientes.
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD} || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - barberia_net
+
+  # Servicio backend Spring Boot (segunda imagen independiente).
+  backend:
+    # Se construye la imagen desde la carpeta backend.
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: barberia-backend:latest
+    container_name: barberia-backend
+    environment:
+      # Activa perfil Docker para usar conexion MySQL del contenedor db.
+      SPRING_PROFILES_ACTIVE: docker
+      # Variables inyectadas a application-docker.properties.
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/barberia_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+    ports:
+      # API accesible desde host en http://localhost:8080
+      - "8080:8080"
+    depends_on:
+      # Espera salud de db para reducir errores de arranque.
+      db:
+        condition: service_healthy
+    networks:
+      - barberia_net
+
+  # Servicio frontend con Nginx (primera imagen independiente).
+  frontend:
+    # Se construye la imagen desde la carpeta frontend.
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: barberia-frontend:latest
+    container_name: barberia-frontend
+    ports:
+      # Frontend disponible en http://localhost:8081
+      - "8081:80"
+    depends_on:
+      # Inicia despues del backend para que /api tenga destino listo.
+      - backend
+    networks:
+      - barberia_net
+# networks significa red
+# Red interna para comunicar frontend <-> backend <-> db por nombre de servicio.
+networks:
+  barberia_net:
+    driver: bridge
+
+# Volumen nombrado para persistencia de la base de datos MySQL.
+volumes:
+  mysql_data:

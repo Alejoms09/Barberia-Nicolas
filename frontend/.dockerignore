@@ -1,0 +1,8 @@
+# Evita copiar metadatos de IDE al contexto de build.
+.idea
+
+# Excluye repositorio git del contexto.
+.git
+
+# Evita copiar archivos temporales comunes.
+*.log
